@@ -1,66 +1,104 @@
-# This file will be used to generate all of the schema-*.json files in a bundle
 schema: draft-07
-name: "k8s-mongo-replicaset"
-description: ""
-ref: github.com/YOUR_NAME_HERE/k8s-mongo-replicaset
-access: "public"
-type: "bundle"
+name: k8s-mongo-replicaset
+description: "Deploy MongoDB to your Kubernetes cluster."
+ref: github.com/massdriver-cloud/massdriver-bundles
+access: public
+type: bundle
 
 steps:
   - path: src
     provisioner: terraform
 
-# schema-params.json
-# JSON Schema sans-fields above
 params:
   examples:
-    - foo: US-West 2 VPC
-    - foo: US-East 1 VPC
+    - __name: Development
+      instance_configuration:
+        disk_size_gb: 10
+        cpu_limit: 0.8
+        memory_limit_gib: 2
+      replica_configuration:
+        number_of_replicas: 0
+    - __name: Production
+      instance_configuration:
+        disk_size_gb: 50
+        cpu_limit: 4.2
+        memory_limit_gib: 8
+      replica_configuration:
+        number_of_replicas: 2
   required:
-    - foo
+    - database_name
+    - namespace
+    - instance_configuration
+    - replica_configuration
   properties:
-    foo:
+    database_name:
       type: string
-      title: Foo
-      description: Name of k8s-mongo-replicaset
-      default: ""
-      examples:
-        - US-West 2 VPC
-        - US-East 1 VPC
+      title: Database Name
+      description: Name of the mongo database to create
+    namespace:
+      type: string
+      title: Kubernetes namespace
+      description: The namespace to deploy the replicaset in
+      default: default
+    instance_configuration:
+      type: object
+      title: Instance Configuration
+      properties:
+        disk_size_gb:
+          type: integer
+          title: Disk Size
+          description: The size (in Gb) of the PVC to request. Must be an integer between 10 and 1000.
+          minimum: 10
+          maximum: 1000
+        cpu_limit:
+          type: number
+          title: CPU Limit
+          description: Unit is in CPUs. Decimal numbers are allowed (3 digits of precision). Value must be between 0.001 and 32.
+          minimum: 0.001
+          maximum: 32
+        memory_limit_gib:
+          type: number
+          title: Memory Limit
+          description: Unit is Gi. Decimal numbers are allowed. Value must be between 0.5 and 64
+          minimum: 0.5
+          maximum: 64
+    replica_configuration:
+      type: object
+      title: Replica Configuration
+      description: "Replica configuration"
+      properties:
+        number_of_replicas:
+          type: integer
+          title: Read Replicas
+          description: Number of read replicas to create. Must be an integer between 0 and 5.
+          minimum: 0
+          maximum: 5
 
-# schema-connections.json
-# Named list of input connections (artifacts) (map[name]artifact)
 connections:
-  properties: {}
-  # required:
-  # - aws_authentication
-  # - network
-  # properties:
-  #   aws_authentication:
-  #     $ref: massdriver/aws-iam-role
-  #   network:
-  #     $ref: massdriver/aws-regional-cloud
+  required:
+    - kubernetes_cluster
+  properties:
+    kubernetes_cluster:
+      $ref: massdriver/kubernetes-cluster
 
-# schema-artifacts.json
-# Named list of output artifacts  (map[name]artifact)
 artifacts:
-  properties: {}
-  # required:
-  #   - network
-  # properties:
-  #   network:
-  #     $ref: massdriver/aws-regional-cloud
+  required:
+    - mongo_authentication
+  properties:
+    mongo_authentication:
+      $ref: massdriver/mongo-authentication
 
-# schema-ui.json
-# List of form customizations for params-schema
 ui:
   ui:order:
-    - "*"
-  ## set top level ui:wiget
-  # secret_key:
-  #    ui:widget: "password"
-  ## Set key in an array of objects
-  # secrets:
-  #   items:
-  #     mdKeyId:
-  #       ui:widget: "hidden"
+    - database_name
+    - namespace
+    - instance_configuration
+    - replica_configuration
+  instance_configuration:
+    ui:order:
+      - disk_size_gb
+      - cpu_limit
+      - memory_limit_gib
+  replica_configuration:
+    ui:order:
+      - number_of_replicas

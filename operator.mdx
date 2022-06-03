@@ -1,10 +1,4 @@
-# Operator Guide
-
-This is the guide for your bundle. It will appear under the `guide` button in Massdriver.
-
-Use it to describe to users how the bundle works, use cases for the bundle, and event examples.
-
-<!-- We may want to polish this for template before releasing --> 
+# Operator Guide for "{type}"
 
 ## TODO:
 
@@ -18,25 +12,53 @@ Use it to describe to users how the bundle works, use cases for the bundle, and 
 * [ ] Write user guide
 * [ ] Remove this TODO block
 
+
 _Brief description of bundle from an operator's point of view_
 
 ## Use Cases
 
-_Common use cases for this bundle_
++ rapid application development because of the flexibility of a document-store
++ replication for read-heavy workloads, "offline" jobs like ETLs, and recovery from a primary node failure
 
 ### Guided Configs
 
-_Describe the guided configs_
++ Development
+  + 10GB disk
+  + 2GiB memory
+  + no replicas, just a single instance
++ Production
+  + 50GB disk
+  + 8GiB memory
+  + 2 replicas, 3 instances total
 
 ## Design
 
+
+```
+            Replica Set (rs0)
+      /            |           \
+Replica 1     Replica 2     Replica n
+    |              |             |
++-------+     +-------+     +-------+
+|Primary|     |Replica|     |Replica|
+|  25GB |     | 25 GB |     | 25GB  |
++-------+     +-------+     +-------+
+```
+
 ### How It Works
 
-_Describe how it works_
++ we deploy the bitnami mongodb helm chart to the k8s cluster that comes in as a connection
++ an "app user" aka non root user is created
++ an additional database is created so we don't use the ones that "come with" mongo
 
 #### Best Practices
 
-#### Security 
+#### Security
+
++ root credentials are created
++ app user credentials are also created (but limited to one database var.database_name)
++ the app user credentials are passed back in the connection_string
++ root credentials can be retrieved (see below)
 
 #### Auditing
 
@@ -44,10 +66,28 @@ _Describe how it works_
 
 #### Observability
 
++ a metrics endpoint is exposed but this bundle does not currently ship metrics / alarms back to Massdriver
+
 ### Trade-offs
 
-_List trade offs made with this bundle_
++ This provisions only a replica set, there's no ability to run standalone or sharded with this bundle.
++ we don't use TLS with mongo, it can be enabled but since we don't expose the service externally, we have this turned off
 
 ### Permissions
 
-_list IAM permissions required on this bundle._
+```bash
+# start a shell inside the k8s cluster to test connecting to the mongo instance
+kubectl run --namespace default mongo-test-mongodb-client --rm --tty -i --restart='Never' --image docker.io/bitnami/mongodb:4.4.4-debian-10-r41 --command -- bash
+# mongo CONNECTION_STRING
+mongo  mongodb://APP_USER:APP_USER_PASSWORD@HOST:27017/DATABASE?replicaSet=rs0
+# inside the "mongo shell"
+show db
+db.posts.insert( { title: "Moving To The Cloud With Massdriver", rating: 10.0 } )
+db.posts.find()
+```
+
+To get the root user password:
+
+```
+kubectl get secret --namespace default SECRET_NAME -o jsonpath="{.data.mongodb-root-password}" | base64 --decode
+```

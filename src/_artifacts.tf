@@ -44,5 +44,9 @@ locals {
 }
 
 resource "massdriver_artifact" "mongo_authentication" {
-  artifact = jsonencode(local.artifact_mongo_authentication)
+  field                = "mongo_authentication"
+  provider_resource_id = "${local.kubernetes_namespace}/${local.kubernetes_service}"
+  type                 = "massdriver/mongo-authentication"
+  name                 = "Mongo at ${local.kubernetes_namespace}/${local.kubernetes_service}"
+  artifact             = jsonencode(local.artifact_mongo_authentication)
 }

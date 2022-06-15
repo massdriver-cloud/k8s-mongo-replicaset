@@ -54,7 +54,7 @@ params:
           type: number
           title: CPU Limit
           description: Unit is in CPUs. Decimal numbers are allowed (3 digits of precision). Value must be between 0.001 and 32.
-          minimum: 0.001
+          minimum: 0.5
           maximum: 32
         memory_limit_gib:
           type: number

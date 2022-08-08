@@ -46,7 +46,6 @@ locals {
 resource "massdriver_artifact" "mongo_authentication" {
   field                = "mongo_authentication"
   provider_resource_id = "${var.namespace}/${local.mongo_host}"
-  type                 = "mongo-authentication"
   name                 = "Mongo at ${var.namespace}/${local.mongo_host}"
   artifact             = jsonencode(local.artifact_mongo_authentication)
 }

@@ -35,8 +35,10 @@ locals {
   }
 
   artifact_mongo_authentication = {
-    authentication = local.data_authentication
-    infrastructure = local.data_infrastructure
+    data = {
+      authentication = local.data_authentication
+      infrastructure = local.data_infrastructure
+    }
     specs = {
       mongo = local.specs_mongo
     }

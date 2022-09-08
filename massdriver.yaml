@@ -1,7 +1,7 @@
 schema: draft-07
 name: k8s-mongo-replicaset
 description: "Deploy MongoDB to your Kubernetes cluster."
-ref: github.com/massdriver-cloud/massdriver-bundles
+source_url: github.com/massdriver-cloud/massdriver-bundles
 access: public
 type: bundle
 

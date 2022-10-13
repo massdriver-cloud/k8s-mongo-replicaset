@@ -62,9 +62,12 @@ params:
       type: object
       title: Replica Configuration
       description: "Replica configuration"
+      required:
+      - number_of_replicas
       properties:
         number_of_replicas:
           type: integer
+          default: 0
           title: Read Replicas
           description: Number of read replicas to create. Must be an integer between 0 and 5.
           minimum: 0

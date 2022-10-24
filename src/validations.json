@@ -1,0 +1,5 @@
+{
+  "do_not_delete": [
+    "helm_release.mongodb"
+  ]
+}

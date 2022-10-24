@@ -62,7 +62,7 @@ Form input parameters for configuring a bundle for deployment.
   - **`memory_limit_gib`** *(number)*: Unit is Gi. Decimal numbers are allowed. Value must be between 0.5 and 64. Minimum: `0.5`. Maximum: `64`.
 - **`namespace`** *(string)*: The namespace to deploy the replicaset in. Default: `default`.
 - **`replica_configuration`** *(object)*: Replica configuration.
-  - **`number_of_replicas`** *(integer)*: Number of read replicas to create. Must be an integer between 0 and 5. Minimum: `0`. Maximum: `5`.
+  - **`number_of_replicas`** *(integer)*: Number of read replicas to create. Must be an integer between 0 and 5. Minimum: `0`. Maximum: `5`. Default: `0`.
 ## Examples
 
   ```json

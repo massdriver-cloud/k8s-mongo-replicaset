@@ -3,7 +3,7 @@ name: k8s-mongo-replicaset
 description: "Deploy MongoDB to your Kubernetes cluster."
 source_url: github.com/massdriver-cloud/k8s-mongo-replicaset
 access: public
-type: bundle
+type: infrastructure
 
 params:
   examples:
@@ -39,6 +39,10 @@ params:
     instance_configuration:
       type: object
       title: Instance Configuration
+      required:
+        - disk_size_gb
+        - cpu_limit
+        - memory_limit_gib
       properties:
         disk_size_gb:
           type: integer

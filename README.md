@@ -17,7 +17,7 @@ Deploy MongoDB to your Kubernetes cluster.
 
 ## Design
 
-For detailed information, check out our [Operator Guide](operator.mdx) for this bundle.
+For detailed information, check out our [Operator Guide](operator.md) for this bundle.
 
 ## Usage
 
@@ -37,45 +37,8 @@ Form input parameters for configuring a bundle for deployment.
 <summary>View</summary>
 
 <!-- PARAMS:START -->
-## Properties
 
-- **`database_name`** *(string)*: Name of the mongo database to create.
-- **`instance_configuration`** *(object)*
-  - **`cpu_limit`** *(number)*: Unit is in CPUs. Decimal numbers are allowed (3 digits of precision). Value must be between 0.001 and 32. Minimum: `0.5`. Maximum: `32`.
-  - **`disk_size_gb`** *(integer)*: The size (in Gb) of the PVC to request. Must be an integer between 10 and 1000. Minimum: `10`. Maximum: `1000`.
-  - **`memory_limit_gib`** *(number)*: Unit is Gi. Decimal numbers are allowed. Value must be between 0.5 and 64. Minimum: `0.5`. Maximum: `64`.
-- **`namespace`** *(string)*: The namespace to deploy the replicaset in. Default: `default`.
-- **`replica_configuration`** *(object)*: Replica configuration.
-  - **`number_of_replicas`** *(integer)*: Number of read replicas to create. Must be an integer between 0 and 5. Minimum: `0`. Maximum: `5`. Default: `0`.
-## Examples
-
-  ```json
-  {
-      "__name": "Development",
-      "instance_configuration": {
-          "cpu_limit": 0.8,
-          "disk_size_gb": 10,
-          "memory_limit_gib": 2
-      },
-      "replica_configuration": {
-          "number_of_replicas": 0
-      }
-  }
-  ```
-
-  ```json
-  {
-      "__name": "Production",
-      "instance_configuration": {
-          "cpu_limit": 4.2,
-          "disk_size_gb": 50,
-          "memory_limit_gib": 8
-      },
-      "replica_configuration": {
-          "number_of_replicas": 2
-      }
-  }
-  ```
+**Params coming soon**
 
 <!-- PARAMS:END -->
 
@@ -89,127 +52,9 @@ Connections from other bundles that this bundle depends on.
 <summary>View</summary>
 
 <!-- CONNECTIONS:START -->
-## Properties
 
-- **`kubernetes_cluster`** *(object)*: Kubernetes cluster authentication and cloud-specific configuration. Cannot contain additional properties.
-  - **`data`** *(object)*
-    - **`authentication`** *(object)*
-      - **`cluster`** *(object)*
-        - **`certificate-authority-data`** *(string)*
-        - **`server`** *(string)*
-      - **`user`** *(object)*
-        - **`token`** *(string)*
-    - **`infrastructure`** *(object)*: Cloud specific Kubernetes configuration data.
-      - **One of**
-        - AWS EKS infrastructure config*object*: . Cannot contain additional properties.
-          - **`arn`** *(string)*: Amazon Resource Name.
+**Connections coming soon**
 
-            Examples:
-            ```json
-            "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
-            ```
-
-            ```json
-            "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
-            ```
-
-          - **`oidc_issuer_url`** *(string)*: An HTTPS endpoint URL.
-
-            Examples:
-            ```json
-            "https://example.com/some/path"
-            ```
-
-            ```json
-            "https://massdriver.cloud"
-            ```
-
-        - Infrastructure Config*object*: Azure AKS Infrastructure Configuration. Cannot contain additional properties.
-          - **`ari`** *(string)*: Azure Resource ID.
-
-            Examples:
-            ```json
-            "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
-            ```
-
-          - **`oidc_issuer_url`** *(string)*
-        - GCP Infrastructure GRN*object*: Minimal GCP Infrastructure Config. Cannot contain additional properties.
-          - **`grn`** *(string)*: GCP Resource Name (GRN).
-
-            Examples:
-            ```json
-            "projects/my-project/global/networks/my-global-network"
-            ```
-
-            ```json
-            "projects/my-project/regions/us-west2/subnetworks/my-subnetwork"
-            ```
-
-            ```json
-            "projects/my-project/topics/my-pubsub-topic"
-            ```
-
-            ```json
-            "projects/my-project/subscriptions/my-pubsub-subscription"
-            ```
-
-            ```json
-            "projects/my-project/locations/us-west2/instances/my-redis-instance"
-            ```
-
-            ```json
-            "projects/my-project/locations/us-west2/clusters/my-gke-cluster"
-            ```
-
-  - **`specs`** *(object)*
-    - **`aws`** *(object)*: .
-      - **`region`** *(string)*: AWS Region to provision in.
-
-        Examples:
-        ```json
-        "us-west-2"
-        ```
-
-    - **`azure`** *(object)*: .
-      - **`region`** *(string)*: Select the Azure region you'd like to provision your resources in.
-    - **`gcp`** *(object)*: .
-      - **`project`** *(string)*
-      - **`region`** *(string)*: The GCP region to provision resources in.
-
-        Examples:
-        ```json
-        "us-east1"
-        ```
-
-        ```json
-        "us-east4"
-        ```
-
-        ```json
-        "us-west1"
-        ```
-
-        ```json
-        "us-west2"
-        ```
-
-        ```json
-        "us-west3"
-        ```
-
-        ```json
-        "us-west4"
-        ```
-
-        ```json
-        "us-central1"
-        ```
-
-    - **`kubernetes`** *(object)*: Kubernetes distribution and version specifications.
-      - **`cloud`** *(string)*: Must be one of: `['aws', 'gcp', 'azure']`.
-      - **`distribution`** *(string)*: Must be one of: `['eks', 'gke', 'aks']`.
-      - **`platform_version`** *(string)*
-      - **`version`** *(string)*
 <!-- CONNECTIONS:END -->
 
 </details>
@@ -222,77 +67,9 @@ Resources created by this bundle that can be connected to other bundles.
 <summary>View</summary>
 
 <!-- ARTIFACTS:START -->
-## Properties
 
-- **`mongo_authentication`** *(object)*: mongo cluster authentication and cloud-specific configuration. Cannot contain additional properties.
-  - **`data`** *(object)*
-    - **`authentication`**: Mongo connection string. Cannot contain additional properties.
-      - **`hostname`** *(string)*
-      - **`password`** *(string)*
-      - **`port`** *(integer)*: Port number. Minimum: `0`. Maximum: `65535`.
-      - **`username`** *(string)*
-    - **`infrastructure`** *(object)*: Mongo cluster infrastructure configuration.
-      - **One of**
-        - Kuberenetes infrastructure config*object*: . Cannot contain additional properties.
-          - **`kubernetes_namespace`** *(string)*
-          - **`kubernetes_service`** *(string)*
-        - Azure Infrastructure Resource ID*object*: Minimal Azure Infrastructure Config. Cannot contain additional properties.
-          - **`ari`** *(string)*: Azure Resource ID.
+**Artifacts coming soon**
 
-            Examples:
-            ```json
-            "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
-            ```
-
-        - MongoDB Atlas Cluster Infrastructure*object*: Minimal MongoDB Atlas cluster infrastructure config. Cannot contain additional properties.
-          - **`cluster_id`** *(string)*
-          - **`project_id`** *(string)*
-  - **`specs`** *(object)*
-    - **`aws`** *(object)*: .
-      - **`region`** *(string)*: AWS Region to provision in.
-
-        Examples:
-        ```json
-        "us-west-2"
-        ```
-
-    - **`azure`** *(object)*: .
-      - **`region`** *(string)*: Select the Azure region you'd like to provision your resources in.
-    - **`gcp`** *(object)*: .
-      - **`project`** *(string)*
-      - **`region`** *(string)*: The GCP region to provision resources in.
-
-        Examples:
-        ```json
-        "us-east1"
-        ```
-
-        ```json
-        "us-east4"
-        ```
-
-        ```json
-        "us-west1"
-        ```
-
-        ```json
-        "us-west2"
-        ```
-
-        ```json
-        "us-west3"
-        ```
-
-        ```json
-        "us-west4"
-        ```
-
-        ```json
-        "us-central1"
-        ```
-
-    - **`mongo`** *(object)*: Informs downstream bundles of Mongo specific data. Cannot contain additional properties.
-      - **`version`** *(string)*: Currently deployed Mongo version.
 <!-- ARTIFACTS:END -->
 
 </details>

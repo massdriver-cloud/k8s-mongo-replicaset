@@ -1,31 +1,30 @@
 schema: draft-07
 name: k8s-mongo-replicaset
-description: "Deploy MongoDB to your Kubernetes cluster."
-source_url: github.com/massdriver-cloud/k8s-mongo-replicaset
-access: public
-type: infrastructure
-
+version: 1.0.0
+description: Deploy MongoDB to your Kubernetes cluster.
+source_url: https://github.com/massdriver-cloud/k8s-mongo-replicaset
+type: application
 params:
   examples:
-    - __name: Development
-      instance_configuration:
-        disk_size_gb: 10
-        cpu_limit: 0.8
-        memory_limit_gib: 2
-      replica_configuration:
-        number_of_replicas: 0
-    - __name: Production
-      instance_configuration:
-        disk_size_gb: 50
-        cpu_limit: 4.2
-        memory_limit_gib: 8
-      replica_configuration:
-        number_of_replicas: 2
+  - __name: Development
+    instance_configuration:
+      disk_size_gb: 10
+      cpu_limit: 0.8
+      memory_limit_gib: 2
+    replica_configuration:
+      number_of_replicas: 0
+  - __name: Production
+    instance_configuration:
+      disk_size_gb: 50
+      cpu_limit: 4.2
+      memory_limit_gib: 8
+    replica_configuration:
+      number_of_replicas: 2
   required:
-    - database_name
-    - namespace
-    - instance_configuration
-    - replica_configuration
+  - database_name
+  - namespace
+  - instance_configuration
+  - replica_configuration
   properties:
     database_name:
       type: string
@@ -40,9 +39,9 @@ params:
       type: object
       title: Instance Configuration
       required:
-        - disk_size_gb
-        - cpu_limit
-        - memory_limit_gib
+      - disk_size_gb
+      - cpu_limit
+      - memory_limit_gib
       properties:
         disk_size_gb:
           type: integer
@@ -65,7 +64,7 @@ params:
     replica_configuration:
       type: object
       title: Replica Configuration
-      description: "Replica configuration"
+      description: Replica configuration
       required:
       - number_of_replicas
       properties:
@@ -76,32 +75,35 @@ params:
           description: Number of read replicas to create. Must be an integer between 0 and 5.
           minimum: 0
           maximum: 5
-
 connections:
   required:
-    - kubernetes_cluster
+  - kubernetes_cluster
   properties:
     kubernetes_cluster:
-      $ref: massdriver/kubernetes-cluster
-
+      "$ref": massdriver/kubernetes-cluster
 artifacts:
   required:
-    - mongo_authentication
+  - mongo_authentication
   properties:
     mongo_authentication:
-      $ref: massdriver/mongo-authentication
-
+      "$ref": massdriver/mongo-authentication
 ui:
   ui:order:
-    - database_name
-    - namespace
-    - instance_configuration
-    - replica_configuration
+  - database_name
+  - namespace
+  - instance_configuration
+  - replica_configuration
   instance_configuration:
     ui:order:
-      - disk_size_gb
-      - cpu_limit
-      - memory_limit_gib
+    - disk_size_gb
+    - cpu_limit
+    - memory_limit_gib
   replica_configuration:
     ui:order:
-      - number_of_replicas
+    - number_of_replicas
+steps:
+- path: src
+  provisioner: opentofu
+  config:
+    checkov:
+      enable: true
